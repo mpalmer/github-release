@@ -18,3 +18,7 @@ Rake::RDocTask.new do |rd|
 	rd.title = 'github-release'
 	rd.rdoc_files.include("README.md", "lib/**/*.rb")
 end
+
+task :release do
+	sh "git release"
+end
