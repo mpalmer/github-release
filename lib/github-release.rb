@@ -108,7 +108,7 @@ class GithubRelease
 
 	def create_release(tag)
 		print "Creating a release for #{tag}..."
-		system("git push #{remote_name} tag #{tag} >/dev/null")
+		system("git push #{remote_name} tag #{tag} >/dev/null 2>&1")
 
 		msg = `git tag -l -n1000 '#{tag}'`
 
