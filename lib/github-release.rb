@@ -67,9 +67,9 @@ class GithubRelease
 		@repo_name ||= begin
 			case repo_url
 				when %r{^https://github.com/([^/]+/[^/]+)}
-					return $1.gsub(/\.git$/, '')
+					$1.gsub(/\.git$/, '')
 				when %r{^(?:git@)?github\.com:([^/]+/[^/]+)}
-					return $1.gsub(/\.git$/, '')
+					$1.gsub(/\.git$/, '')
 				else
 					raise RuntimeError,
 					      "I cannot recognise the format of the push URL for remote #{remote_name} (#{repo_url})"
@@ -91,8 +91,18 @@ class GithubRelease
 	end
 
 	def github_releases
-		@github_releases ||= api.repo(repo_name).rels[:releases].get.data.map(&:tag_name)
+		@github_releases ||= api_repo_rels[:releases].get.data.map(&:tag_name)
 		log_val(@github_releases)
+	end
+
+	def api_repo
+		@api_repo ||= api.repo(repo_name)
+		log_val(@api_repo)
+	end
+
+	def api_repo_rels
+		@api_repo_rels ||= api_repo.rels
+		log_val(@api_repo_rels)
 	end
 
 	def git_config(item, default = nil)
