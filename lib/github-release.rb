@@ -17,6 +17,8 @@ class GithubRelease
 	private
 	def api
 		@api ||= Octokit::Client.new(:access_token => token)
+		@api.auto_paginate = true
+		@api
 	end
 
 	def token
@@ -91,18 +93,8 @@ class GithubRelease
 	end
 
 	def github_releases
-		@github_releases ||= api_repo_rels[:releases].get.data.map(&:tag_name)
+		@github_releases ||= api.releases(repo_name).map(&:tag_name)
 		log_val(@github_releases)
-	end
-
-	def api_repo
-		@api_repo ||= api.repo(repo_name)
-		log_val(@api_repo)
-	end
-
-	def api_repo_rels
-		@api_repo_rels ||= api_repo.rels
-		log_val(@api_repo_rels)
 	end
 
 	def git_config(item, default = nil)
