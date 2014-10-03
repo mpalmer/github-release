@@ -16,9 +16,7 @@ class GithubRelease
 
 	private
 	def api
-		@api ||= Octokit::Client.new(:access_token => token)
-		@api.auto_paginate = true
-		@api
+		@api ||= Octokit::Client.new(:access_token => token, :auto_paginate => true)
 	end
 
 	def token
