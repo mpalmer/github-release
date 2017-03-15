@@ -61,14 +61,16 @@ class GithubRelease
 	end
 
 	def pre_regex
-		@pre_regex ||= `git config --get release.pre-regex`.strip
-		@pre_regex = /^v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$/ if @pre_regex.empty?
+		config_entry = `git config --get release.pre-regex`.strip
+		@pre_regex = /#{config_entry}/ if !config_entry.empty?
+		@pre_regex ||= /^v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$/
 		log_val(@pre_regex)
 	end
 
 	def tag_regex
-		@tag_regex ||= `git config --get release.tag-regex`.strip
-		@tag_regex = /^v\d+\.\d+(\.\d+)?$/ if @tag_regex.empty?
+		config_entry = `git config --get release.tag-regex`.strip
+		@tag_regex = /#{config_entry}/ if !config_entry.empty?
+		@tag_regex ||= /^v\d+\.\d+(\.\d+)?$/
 		log_val(@tag_regex)
 	end
 
