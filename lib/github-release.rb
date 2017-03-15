@@ -69,7 +69,7 @@ class GithubRelease
 	def pre_regex
 		config_entry = `git config --get release.pre-regex`.strip
 		@pre_regex = /#{config_entry}/ if !config_entry.empty?
-		@pre_regex ||= /^v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$/
+		@pre_regex ||= /^v\d+\.\d+(\.\d+)?(-(alpha|beta|rc)\d+.*){1}$/
 		log_val(@pre_regex)
 	end
 
