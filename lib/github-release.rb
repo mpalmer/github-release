@@ -113,9 +113,10 @@ class GithubRelease
 	end
 
 	def create_release(tag)
-		print "Creating a release for #{tag}..."
-		system("git push #{remote_name} tag #{tag} >/dev/null 2>&1")
+		puts "Pushing to #{remote_name}..."
+		system("git push #{remote_name} tag #{tag}")
 
+		print "Creating a release for #{tag}..."
 		msg = `git tag -l -n1000 '#{tag}'`
 
 		# Ye ghods is is a horrific format to parse
