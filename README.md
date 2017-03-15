@@ -79,7 +79,8 @@ differently.  None of them should be required for normal, sane use.
    expression will be pushed up by `git release`, and only those tags will
    be marked as releases.
 
- * `release.pre-regex` (default `v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$`) -- The
-   regular expression to filter which tages denote prereleases.  Only tags
-   which match this regular expression will be pushed up by `git release`,
-   and these will be marked as Pre-release on the github release pages.
+ * `release.pre-regex` (default `v\d+\.\d+(\.\d+)?(-(alpha|beta|rc)\d+.*){1}$`)
+   -- The regular expression to filter which tages denote prereleases.
+   Only tags which match this regular expression will be pushed up by
+   `git release`, and these will be marked as Pre-release on the github
+   release pages.
