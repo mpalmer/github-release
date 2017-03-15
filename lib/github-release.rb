@@ -112,6 +112,11 @@ class GithubRelease
 		log_val(@repo_url)
 	end
 
+	def remote_mirror
+		@remote_mirror ||= git_config("remote.#{remote_name}.mirror")
+		log_val(@remote_mirror)
+	end
+
 	def remote_name
 		@remote_name ||= git_config("release.remote", "origin")
 		log_val(@remote_name)
@@ -134,8 +139,15 @@ class GithubRelease
 	end
 
 	def create_release(tag, prerelease)
-		puts "Pushing to #{remote_name}..."
-		system("git push #{remote_name} tag #{tag}")
+		@pushed ||= false
+		if remote_mirror == "true" && @pushed == false
+			puts "Pushing to #{remote_name}..."
+			system("git push #{remote_name}")
+			@pushed = true
+		elsif remote_mirror != "true"
+			puts "Pushing #{tag} to #{remote_name}..."
+			system("git push #{remote_name} tag #{tag}")
+		end
 
 		print "Creating a release for #{tag}..."
 		msg = `git tag -l -n1000 '#{tag}'`
