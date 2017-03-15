@@ -3,13 +3,21 @@ require 'io/console'
 
 class GithubRelease
 	def run
+		new_prereleases = tagged_prereleases.select { |p| !github_releases.include?(p) }
+
+		if new_prereleases.empty?
+			puts "No new pre-release tags to push."
+		end
+
+		new_prereleases.each { |t| create_release(t, true) }
+
 		new_releases = tagged_releases.select { |r| !github_releases.include?(r) }
 
 		if new_releases.empty?
 			puts "No new release tags to push."
 		end
 
-		new_releases.each { |t| create_release(t) }
+		new_releases.each { |t| create_release(t, false) }
 
 		puts "All done!"
 	end
@@ -52,6 +60,12 @@ class GithubRelease
 		log_val(token)
 	end
 
+	def pre_regex
+		@pre_regex ||= `git config --get release.pre-regex`.strip
+		@pre_regex = /^v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$/ if @pre_regex.empty?
+		log_val(@pre_regex)
+	end
+
 	def tag_regex
 		@tag_regex ||= `git config --get release.tag-regex`.strip
 		@tag_regex = /^v\d+\.\d+(\.\d+)?$/ if @tag_regex.empty?
@@ -61,6 +75,11 @@ class GithubRelease
 	def tagged_releases
 		@tagged_releases ||= `git tag`.split("\n").map(&:strip).grep tag_regex
 		log_val(@tagged_releases)
+	end
+
+	def tagged_prereleases
+		@tagged_prereleases ||= `git tag`.split("\n").map(&:strip).grep pre_regex
+		log_val(@tagged_prereleases)
 	end
 
 	def repo_name
@@ -106,7 +125,7 @@ class GithubRelease
 		log_val(@config_cache[item], item)
 	end
 
-	def create_release(tag)
+	def create_release(tag, prerelease)
 		puts "Pushing to #{remote_name}..."
 		system("git push #{remote_name} tag #{tag}")
 
@@ -118,7 +137,7 @@ class GithubRelease
 		name = name.gsub(/^#{tag}/, '').strip
 		body = body.split("\n").map { |l| l.sub(/^    /, '') }.join("\n")
 
-		api.create_release(repo_name, tag, :name => name, :body => body)
+		api.create_release(repo_name, tag, :name => name, :body => body, :prerelease => prerelease)
 
 		puts " done!"
 	end
