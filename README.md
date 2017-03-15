@@ -73,11 +73,10 @@ differently.  None of them should be required for normal, sane use.
    generate an initial token; if you need to override it on a per-repo
    basis, this is the key you'll use.
 
- * `release.tag-regex` (default `v\d+\.\d+(\.\d+)?$`) -- The regular
-   expression to filter which tags denote releases, as opposed to other tags
-   you might have decided to make.  Only tags which match this regular
-   expression will be pushed up by `git release`, and only those tags will
-   be marked as releases.
+ * `release.pre-regex` (default `v\d+\.\d+(\.\d+)?(-rc\d+.*){1}$`) -- The
+   regular expression to filter which tages denote prereleases.  Only tags
+   which match this regular expression will be pushed up by `git release`,
+   and these will be marked as Pre-release on the github release pages.
 
 
 # License
