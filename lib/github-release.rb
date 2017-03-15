@@ -68,7 +68,7 @@ class GithubRelease
 			case repo_url
 				when %r{^https://github.com/([^/]+/[^/]+)}
 					$1.gsub(/\.git$/, '')
-				when %r{^(?:git@)?github\.com:([^/]+/[^/]+)}
+				when %r{^(?:git@)?github\.com:/?([^/]+/[^/]+)}
 					$1.gsub(/\.git$/, '')
 				else
 					raise RuntimeError,
