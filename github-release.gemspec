@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 	s.files = `git ls-files`.split("\n")
 	s.executables = ["git-release"]
 
-	s.add_dependency 'octokit', '~> 3.0'
+	s.add_dependency 'octokit', '>= 3.0', '< 5'
 	s.add_dependency 'git-version-bump'
 
 	s.add_development_dependency 'rake'
