@@ -37,11 +37,17 @@ class GithubRelease
 		pass = $stdin.noecho(&:gets).chomp
 		puts
 
+		headers = {}
+
 		api = Octokit::Client.new(:login => user, :password => pass)
 		begin
-			res = api.create_authorization(:scopes => [:repo], :note => "git release")
+			res = api.create_authorization(:scopes => [:repo], :note => "git release #{Time.now.strftime("%FT%TZ")}", :headers => headers)
+		rescue Octokit::OneTimePasswordRequired
+			print "OTP code: "
+			headers["X-GitHub-OTP"] = $stdin.gets.chomp
+			retry
 		rescue Octokit::Unauthorized
-			puts "Username or password incorrect.  Please try again."
+			puts "Credentials incorrect.  Please try again."
 			return get_new_token
 		end
 
